@@ -1,5 +1,6 @@
 import csv
 import employee
+import pytest
 
 
 def csv_to_objects(file_name):
@@ -47,7 +48,7 @@ def edit_html(array, headers, file_string):
         body_rows_str += "<th>" + i.department + "</th> "
         body_rows_str += "<th>" + i.email + "</th> "
         body_rows_str += "<th>" + i.phone + "</th> "
-        body_rows_str += "</tr> \n\t\t\t\t"
+        body_rows_str += "</tr> \n"
 
     file_string = str(file_string).format(headings=headers_str, body_rows=body_rows_str)
 
@@ -64,5 +65,13 @@ def main():
     new_html = edit_html(arr_of_employees, headers, new_html)
     write_in_file(output_html, new_html)
 
+
+def test_func1():
+    x, headers = csv_to_objects('Employee.csv')
+    assert len(headers) > 0
+
+def test_func2():
+    x, headers = csv_to_objects('Employee.csv')
+    assert headers[0] == "ID"
 
 main()
