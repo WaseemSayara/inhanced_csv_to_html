@@ -1,27 +1,33 @@
 import csv
 import employee
-import pytest
 
 
 def csv_to_objects(file_name):
     """a function the creates objects of from the csv file"""
-    with open('resources/' + file_name, newline='') as csvfile:
-        csv_reader = csv.reader(csvfile)
-        headers = list(next(csv_reader, None))
-        arr_of_employees = []
-        for row in csv_reader:
-            new_employee = employee.Employee(int(row[0]), row[1], int(row[2]), row[3],
-                                             row[4], row[5], row[6])
-            arr_of_employees.append(new_employee)
-        return [arr_of_employees, headers]
+    try:
+        with open('resources/' + file_name, newline='') as csv_file:
+            csv_reader = csv.reader(csv_file)
+            headers = list(next(csv_reader, None))
+            arr_of_employees = []
+            for row in csv_reader:
+                new_employee = employee.Employee(int(row[0]), row[1], int(row[2]), row[3],
+                                                 row[4], row[5], row[6])
+                arr_of_employees.append(new_employee)
+            return [arr_of_employees, headers]
+    except FileNotFoundError:
+        return
 
 
 def read_from_file(file_name):
     """a function to read from a file"""
-    file = open('resources/' + file_name, "r")
-    file_string = file.read()
-    file.close()
-    return file_string
+    try:
+        file = open('resources/' + file_name, "r")
+        file_string = file.read()
+        file.close()
+        return file_string
+
+    except FileNotFoundError:
+        return "file not found"
 
 
 def write_in_file(file_name, string):
@@ -29,6 +35,7 @@ def write_in_file(file_name, string):
     file = open('resources/' + file_name, "w")
     file.write(string)
     file.close()
+    return True
 
 
 def edit_html(array, headers, file_string):
@@ -64,14 +71,7 @@ def main():
     new_html = read_from_file(input_template)
     new_html = edit_html(arr_of_employees, headers, new_html)
     write_in_file(output_html, new_html)
+    print("The program ended correctly")
 
-
-def test_func1():
-    x, headers = csv_to_objects('Employee.csv')
-    assert len(headers) > 0
-
-def test_func2():
-    x, headers = csv_to_objects('Employee.csv')
-    assert headers[0] == "ID"
 
 main()
